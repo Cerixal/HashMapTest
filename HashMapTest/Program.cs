@@ -15,13 +15,15 @@ namespace HashMapTest
         }
 
     }
+
+
     internal class Program
     {
 
         static Stopwatch sw;
         static Hashtable UserDataHash = new();
         static List<UserDataStruct> UserDataList = new();
-       
+        static Dictionary<int, string> UserDataDict = new();
 
         static void Main(string[] args)
         {
@@ -30,11 +32,12 @@ namespace HashMapTest
             UserDataHash = new Hashtable();
             UserDataList = new List<UserDataStruct>();
             //adding data
-            for (int i = 0; i < 4000000; i++)
+            for (int i = 0; i < 40000000; i++)
             {
                 //demonstration of speed difference
                 UserDataHash.Add(i, "Hash User " + i);
                 UserDataList.Add(new UserDataStruct(i, "List User " + i));
+                UserDataDict.Add(i, "Dict User " + i);
             }
             //removing
             if (UserDataHash.ContainsKey(0))
@@ -65,7 +68,7 @@ namespace HashMapTest
             string username = string.Empty;
             while (cycle < cycles)
             {
-                randomUser = randomuserGen.Next(3000000, 4000000);
+                randomUser = randomuserGen.Next(30000000, 40000000);
 
                 startTime = sw.ElapsedMilliseconds;
                 // access from list
@@ -79,8 +82,15 @@ namespace HashMapTest
                 username = (string)UserDataHash[randomUser];
                 endTime = sw.ElapsedMilliseconds;
                 deltaTime = endTime - startTime;
-                Console.WriteLine("Time taken to retrieve " + username + " from hash took " + string.Format("{0:0.##}", deltaTime) + "ms\n");
+                Console.WriteLine("Time taken to retrieve " + username + " from hash took " + string.Format("{0:0.##}", deltaTime) + "ms");
 
+                startTime = sw.ElapsedMilliseconds;
+                // access from list
+                //username = GetUserFromDict(randomUser);
+                username = UserDataDict.FirstOrDefault(e => e.Key == randomUser).Value;
+                endTime = sw.ElapsedMilliseconds;
+                deltaTime = endTime - startTime;
+                Console.WriteLine("Time taken to retrieve " + username + " from dictionary took " + string.Format("{0:0.##}", deltaTime) + "ms\n");
 
                 cycle++;
             }
@@ -93,6 +103,14 @@ namespace HashMapTest
                 {
                     return UserDataList[i].Name;
                 }
+            }
+            return string.Empty;
+        }
+        static string GetUserFromDict(int userId)
+        {
+            if(UserDataDict.TryGetValue(userId, out string Username))
+            {
+                return Username;
             }
             return string.Empty;
         }
