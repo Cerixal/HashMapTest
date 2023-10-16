@@ -51,7 +51,7 @@ namespace HashMapTest
             {
                 Console.WriteLine("key: "+item.Key+" / Value"+item.Value);
             }*/
-            //Access (the main reason for use as a near constant O(1) lookup times
+            //Access (the main reason for use as a near constant O(1) lookup times)
             Random randomuserGen = new();
             int randomUser = -1;
 
